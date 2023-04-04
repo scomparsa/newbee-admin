@@ -8,14 +8,11 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs } from "vue";
+import { reactive } from "vue";
 import { useRouter } from "vue-router";
+import { pathMap } from "@/utils";
 
 const router = useRouter();
-const pathMap = {
-  index: "首页",
-  add: "添加商品",
-};
 const state = reactive({ name: "首页" });
 router.afterEach((to) => {
   state.name = pathMap[to.name as keyof typeof pathMap];

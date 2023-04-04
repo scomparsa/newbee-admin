@@ -44,14 +44,25 @@ import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
+import { localGet, pathMap } from "@/utils";
 
 const noMenu = ["/login"];
 const router = useRouter();
 const state = reactive({ showMenu: true });
 
-router.beforeEach((to) => {
+router.beforeEach((to, from, next) => {
+  if (to.path == "/login") {
+    next();
+  } else {
+    if (!localGet("token")) {
+      next({ path: "/login" });
+    } else {
+      next();
+    }
+  }
+
   state.showMenu = !noMenu.includes(to.path);
-  console.log(`state`, state);
+  document.title = pathMap[to.name as keyof typeof pathMap];
 });
 </script>
 

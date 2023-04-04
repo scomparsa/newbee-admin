@@ -18,11 +18,13 @@
         ref="loginForm"
         :model="state.ruleForm"
         :rules="state.rules"
+        @submit="submitForm"
       >
         <el-form-item label="账号" prop="username">
           <el-input
             type="text"
             autocomplete="off"
+            placeholder="admin"
             v-model.trim="state.ruleForm.username"
           ></el-input>
         </el-form-item>
@@ -30,12 +32,15 @@
           <el-input
             type="password"
             autocomplete="off"
+            placeholder="123456"
             v-model.trim="state.ruleForm.password"
           ></el-input>
         </el-form-item>
         <el-form-item>
           <div style="color: #333">登录表示您已同意<a>《服务条款》</a></div>
-          <el-button style="width: 100%" type="primary">立即登录</el-button>
+          <el-button style="width: 100%" type="primary" native-type="submit"
+            >立即登录</el-button
+          >
           <el-checkbox v-model="state.checked" @change="!state.checked"
             >下次自动登录</el-checkbox
           >
@@ -47,8 +52,12 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
+import { ElForm } from "element-plus";
+import { Md5 } from "ts-md5";
+import axios from "@/utils/axios";
+import { localSet } from "@/utils/index";
 
-const loginForm = ref(null);
+const loginForm = ref<InstanceType<typeof ElForm>>();
 const state = reactive({
   ruleForm: {
     username: "",
@@ -60,6 +69,25 @@ const state = reactive({
     password: [{ required: true, message: "密码不能为空", trigger: "blur" }],
   },
 });
+
+const submitForm = async () => {
+  loginForm.value?.validate((valid) => {
+    if (valid) {
+      axios
+        .post<any, string>("/adminUser/login", {
+          userName: state.ruleForm.username || "",
+          passwordMd5: Md5.hashStr(state.ruleForm.password),
+        })
+        .then((res) => {
+          localSet("token", res);
+          window.location.href = "/";
+        });
+    } else {
+      console.error("error submit!!");
+      return false;
+    }
+  });
+};
 </script>
 
 <style scoped>
@@ -106,13 +134,5 @@ const state = reactive({
 .login-form {
   width: 70%;
   margin: 0 auto;
-}
-
-.login-form :deep(.el-form-item) {
-  margin-bottom: 0;
-}
-
-.login-form :deep(.el-form-item__label) {
-  padding: 0;
 }
 </style>
