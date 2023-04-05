@@ -50,12 +50,12 @@ const noMenu = ["/login"];
 const router = useRouter();
 const state = reactive({ showMenu: true });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   if (to.path == "/login") {
     next();
   } else {
     if (!localGet("token")) {
-      next({ path: "/login" });
+      window.location.href = "?#/login";
     } else {
       next();
     }
@@ -112,6 +112,10 @@ router.beforeEach((to, from, next) => {
   height: calc(100vh - 100px);
   overflow: auto;
   padding: 10px;
+}
+
+.el-menu {
+  border-right: 0;
 }
 </style>
 
