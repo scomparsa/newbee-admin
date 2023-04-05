@@ -62,7 +62,7 @@ router.beforeEach((to, _, next) => {
   }
 
   state.showMenu = !noMenu.includes(to.path);
-  document.title = pathMap[to.name as keyof typeof pathMap];
+  document.title = `${pathMap[to.name as keyof typeof pathMap]} | 新蜂商城`;
 });
 </script>
 
