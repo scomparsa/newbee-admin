@@ -16,7 +16,7 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="/">
-                <el-icon><DataLine /></el-icon>首页
+                <el-icon><DataLine /></el-icon>大盘数据
               </el-menu-item>
               <el-menu-item index="/add">
                 <el-icon><DataLine /></el-icon>添加商品
